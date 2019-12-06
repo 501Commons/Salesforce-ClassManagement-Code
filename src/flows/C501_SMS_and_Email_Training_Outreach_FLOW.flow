@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <name>Outbound_Email_SMS_APEX</name>
+        <label>Outbound Email/SMS APEX</label>
+        <locationX>161</locationX>
+        <locationY>52</locationY>
+        <actionName>C501_Outreach_Email_SMS</actionName>
+        <actionType>apex</actionType>
+        <inputParameters>
+            <name>emailTemplatePrefix</name>
+            <value>
+                <stringValue>Outreach Email</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>smsTemplatePrefix</name>
+            <value>
+                <stringValue>Outreach SMS</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>replyToAddress</name>
+            <value>
+                <stringValue>training@imaginewa.org</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>trainingID</name>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <formulas>
+        <name>contactRTforOutreach</name>
+        <dataType>String</dataType>
+        <expression>CASE(TEXT({!Training.Class_Type__c}),
+&quot;FFN&quot;,&quot;Training&quot;,
+&quot;Imagine U&quot;,&quot;Intern, Mentor&quot;,
+&quot;Facility&quot;,&quot;Facility&quot;,
+&quot;Substitute&quot;,&quot;Substitute&quot;,
+&quot;PREPARE&quot;,&quot;PREPARE&quot;,
+&quot;&quot;)</expression>
+    </formulas>
+    <formulas>
+        <name>dateNow</name>
+        <dataType>Date</dataType>
+        <expression>NOW()</expression>
+    </formulas>
+    <formulas>
+        <name>emailFinal</name>
+        <dataType>String</dataType>
+        <expression>{!substituteMergeFieldsSMSTemplate}&amp;{!emailFooter}</expression>
+    </formulas>
+    <formulas>
+        <name>emailFooter</name>
+        <dataType>String</dataType>
+        <expression>CASE(TEXT({!Training.Language__c}),&quot;Spanish&quot;,&quot;Administrar preferencias de correo electrónico: http://twilio-imagineinstitute.cs21.force.com/EmailOptOut?cid=&quot;&amp;{!eachContactforOutreach.Id},&quot;Manage email preferences: http://twilio-imagineinstitute.cs21.force.com/EmailOptOut?cid=&quot;&amp;{!eachContactforOutreach.Id})</expression>
+    </formulas>
+    <formulas>
+        <name>firstCountyinList</name>
+        <dataType>String</dataType>
+        <expression>(LEFT({!CountyMultiSelectString},FIND(&quot;;&quot;,{!CountyMultiSelectString})-1))</expression>
+    </formulas>
+    <formulas>
+        <name>messageFormula</name>
+        <dataType>String</dataType>
+        <expression>&quot;We have a training coming up in your area on &quot; &amp; TEXT( MONTH( DATEVALUE({!Training.custom_Start_DateTime__c}) ) ) &amp; &quot;/&quot; &amp; TEXT( DAY( DATEVALUE({!Training.custom_Start_DateTime__c}) ) ) &amp; &quot;/&quot; &amp; TEXT( YEAR( DATEVALUE({!Training.custom_Start_DateTime__c}) ) ) &amp;&quot;. Register at http://bit.ly/2Lr12oT. IMAGINE INSTITUTE&quot;</expression>
+    </formulas>
+    <formulas>
+        <name>OutreachTemplateName</name>
+        <dataType>String</dataType>
+        <expression>&quot;Outreach SMS-Email &quot;+{!TrainingLanguageforTemplate}</expression>
+    </formulas>
+    <formulas>
+        <name>removeInstructionsfromSMSTemplate</name>
+        <dataType>String</dataType>
+        <expression>(RIGHT({!SMSEmailTemplate.Body},LEN({!SMSEmailTemplate.Body})-(FIND(&quot;&gt;&gt;&gt;&gt;&quot;,{!SMSEmailTemplate.Body})+5)))</expression>
+    </formulas>
+    <formulas>
+        <name>removeLeftCounty</name>
+        <dataType>String</dataType>
+        <expression>(RIGHT({!CountyMultiSelectString},LEN({!CountyMultiSelectString})-FIND(&quot;;&quot;,{!CountyMultiSelectString})))</expression>
+    </formulas>
+    <formulas>
+        <name>removeMultiSelectBrackets</name>
+        <dataType>String</dataType>
+        <expression>TRIM(SUBSTITUTE(SUBSTITUTE({!CountyMultiSelectString},&quot;[&quot;,&quot;&quot;),&quot;]&quot;,&quot;&quot;)) + &quot;;&quot;</expression>
+    </formulas>
+    <formulas>
+        <name>smsFinal</name>
+        <dataType>String</dataType>
+        <expression>{!substituteMergeFieldsSMSTemplate}&amp;{!smsFooter}</expression>
+    </formulas>
+    <formulas>
+        <name>smsFooter</name>
+        <dataType>String</dataType>
+        <expression>CASE(TEXT({!Training.Language__c}),&quot;Spanish&quot;,&quot;responda STOP para no recibir más mensajes de texto del IMAGINE INSTITUTE&quot;,&quot;reply STOP to no longer receive text messages from IMAGINE INSTITUTE&quot;)</expression>
+    </formulas>
+    <formulas>
+        <name>substituteMergeFieldsSMSTemplate</name>
+        <dataType>String</dataType>
+        <expression>SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE({!removeInstructionsfromSMSTemplate}, &quot;&lt;Training_Name__c&gt;&quot;, {!Training.Training_Name__c}),&quot;&lt;Start_DateTime__c&gt;&quot;,TEXT( MONTH( DATEVALUE({!Training.custom_Start_DateTime__c}) ) ) &amp; &quot;/&quot; &amp; TEXT( DAY( DATEVALUE({!Training.custom_Start_DateTime__c}) ) ) &amp; &quot;/&quot; &amp; TEXT( YEAR( DATEVALUE({!Training.custom_Start_DateTime__c}) ) )),&quot;&lt;City__c&gt;&quot;,{!Training.City__c}),&quot;&lt;Registration_Link__c&gt;&quot;,{!Training.C501_Registration_Link__c})</expression>
+    </formulas>
+    <formulas>
+        <name>TrainingLanguageforTemplate</name>
+        <dataType>String</dataType>
+        <expression>IF(TEXT({!Training.Language__c})=&quot;Spanish&quot;,TEXT({!Training.Language__c}),&quot;English&quot;)</expression>
+    </formulas>
+    <interviewLabel>SMS and Email Training Outreach FLOW {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>SMS and Email Training Outreach FLOW</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <startElementReference>Outbound_Email_SMS_APEX</startElementReference>
+    <status>Active</status>
+    <variables>
+        <name>contactsForOutreach</name>
+        <dataType>SObject</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>Contact</objectType>
+    </variables>
+    <variables>
+        <name>countyCollection</name>
+        <dataType>String</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>CountyMultiSelectString</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>eachContactforOutreach</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>Contact</objectType>
+    </variables>
+    <variables>
+        <name>eachOutreachCounty</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <description>Training (Campaign) ID</description>
+        <name>recordId</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>SMSEmailTemplate</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>EmailTemplate</objectType>
+    </variables>
+    <variables>
+        <name>smsMessage</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>Training</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>Campaign</objectType>
+    </variables>
+    <variables>
+        <name>twilioOutput</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+</Flow>

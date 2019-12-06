@@ -1,0 +1,549 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <decisions>
+        <processMetadataValues>
+            <name>index</name>
+            <value>
+                <numberValue>0.0</numberValue>
+            </value>
+        </processMetadataValues>
+        <name>myDecision</name>
+        <label>myDecision</label>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>myDecision4</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>default</defaultConnectorLabel>
+        <rules>
+            <name>myRule_1</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>formula_myRule_1</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>myRule_1_A1</targetReference>
+            </connector>
+            <label>Campaign is Created</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <processMetadataValues>
+            <name>index</name>
+            <value>
+                <numberValue>1.0</numberValue>
+            </value>
+        </processMetadataValues>
+        <name>myDecision4</name>
+        <label>myDecision4</label>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <defaultConnectorLabel>default</defaultConnectorLabel>
+        <rules>
+            <name>myRule_5</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>formula_myRule_5</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>myRule_5_pmetdec</targetReference>
+            </connector>
+            <label>Training County Changed</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>myRule_5_pmetdec</name>
+        <label>Previously Met Decision</label>
+        <locationX>500</locationX>
+        <locationY>100</locationY>
+        <defaultConnector>
+            <targetReference>myRule_5_A1</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Not Previously Met</defaultConnectorLabel>
+        <rules>
+            <name>myRule_5_pmetnullrule</name>
+            <conditionLogic>or</conditionLogic>
+            <conditions>
+                <leftValueReference>myVariable_old</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>myRule_5_A1</targetReference>
+            </connector>
+            <label>Previously Met - Null</label>
+        </rules>
+        <rules>
+            <name>myRule_5_pmetrule</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>formula_myRule_5_pmetrule</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <label>Previously Met - Prev</label>
+        </rules>
+    </decisions>
+    <description>When a new Campaign/Training is created, a matching Salesforce Event is created that will sync with Google Calendar</description>
+    <formulas>
+        <processMetadataValues>
+            <name>originalFormula</name>
+            <value>
+                <stringValue>[Campaign].custom_End_DateTime__c </stringValue>
+            </value>
+        </processMetadataValues>
+        <name>formula_2_myRule_1_A1_1289305091</name>
+        <dataType>DateTime</dataType>
+        <expression>{!myVariable_current.custom_End_DateTime__c}</expression>
+    </formulas>
+    <formulas>
+        <processMetadataValues>
+            <name>originalFormula</name>
+            <value>
+                <stringValue>[Campaign].custom_Start_DateTime__c </stringValue>
+            </value>
+        </processMetadataValues>
+        <name>formula_3_myRule_1_A1_4988774744</name>
+        <dataType>DateTime</dataType>
+        <expression>{!myVariable_current.custom_Start_DateTime__c}</expression>
+    </formulas>
+    <formulas>
+        <processMetadataValues>
+            <name>originalFormula</name>
+            <value>
+                <stringValue>CASE([Campaign].C501_Training_Location__c.Imagine_WA_County__c ,
+&quot;Adams&quot;,&quot;Grant; Douglas; Adams; Lincoln; Spokane; Whitman; Franklin; Benton; Walla Walla; Columbia; Garfield; Asotin&quot;,
+&quot;Asotin&quot;,&quot;Benton; Walla Walla; Columbia; Adams; Franklin; Whitman; Garfield; Asotin; Spokane&quot;,
+&quot;Benton&quot;,&quot;Benton; Yakima; Walla Walla; Columbia; Grant; Adams; Franklin&quot;,
+&quot;Chelan&quot;,&quot;Kittitas; Grant; Douglas; Chelan; Okanogan &quot;,
+&quot;Clallam&quot;,&quot;Clallam; Jefferson; Grays Harbor; Mason; Kitsap; Thurston&quot;,
+&quot;Clark&quot;,&quot;Pacific; Lewis; Cowlitz; Clark; Skamania; Klickitat; Wahkiakum&quot;,
+&quot;Columbia&quot;,&quot;Benton; Walla Walla; Columbia; Adams; Franklin; Whitman; Garfield; Asotin; Spokane&quot;,
+&quot;Cowlitz&quot;,&quot;Pacific; Lewis; Cowlitz; Clark; Skamania; Klickitat; Wahkiakum&quot;,
+&quot;Douglas&quot;,&quot;Yakima; Kittitas; Grant; Douglas; Chelan; Adams; Okanoogan; Ferry&quot;,
+&quot;Ferry&quot;,&quot;Douglas; Okanogan; Ferry; Lincoln; Stevens; Pend Oreille; Spokane&quot;,
+&quot;Franklin&quot;,&quot;Benton; Walla Walla; Columbia; Grant; Adams; Franklin; Whitman; Garfield; Asotin&quot;,
+&quot;Garfield&quot;,&quot;Benton; Walla Walla; Columbia; Adams; Franklin; Whitman; Garfield; Asotin; Spokane&quot;,
+&quot;Grant&quot;,&quot;Yakima; Kittitas; Grant; Douglas; Chelan; Adams&quot;,
+&quot;Grays Harbor&quot;,&quot;Clallam; Jefferson; Grays Harbor; Mason; Kitsap; Thurston; Pacific; Lewis; Wahkiakum&quot;,
+&quot;Island&quot;,&quot;Island; San Juan; Whatcom; Skagit; Snohomish; Clallam; Jefferson; Kitsap&quot;,
+&quot;Jefferson&quot;,&quot;Clallam; Jefferson; Grays Harbor; Mason; Kitsap; Thurston&quot;,
+&quot;King&quot;,&quot;King; Snohomish; Pierce&quot;,
+&quot;Kitsap&quot;,&quot;Kitsap; Clallam; Jefferson; Grays Harbor; Mason; Thurston; Pierce&quot;,
+&quot;Kittitas&quot;,&quot;Yakima; Kittitas; Grant; Douglas; Chelan&quot;,
+&quot;Klickitat&quot;,&quot;Pacific; Lewis; Cowlitz; Clark; Skamania; Klickitat&quot;,
+&quot;Lewis&quot;,&quot;Pacific; Lewis; Pierce; Thurston; Cowlitz; Clark; Skamania; Klickitat; Wahkiakum&quot;,
+&quot;Lincoln&quot;,&quot;Douglas; Grant; Okanogan; Ferry; Lincoln; Stevens; Pend Oreille; Spokane; Adams&quot;,
+&quot;Mason&quot;,&quot;Clallam; Jefferson; Grays Harbor; Mason; Kitsap; Thurston&quot;,
+&quot;Okanogan&quot;,&quot;Grant; Douglas; Chelan; Okanogan; Ferry; Lincoln; Stevens&quot;,
+&quot;Pacific&quot;,&quot;Pacific; Lewis; Pierce; Thurston; Cowlitz; Clark; Skamania; Wahkiakum&quot;,
+&quot;Pend Oreille&quot;,&quot;Ferry; Lincoln; Stevens; Pend Oreille; Spokane; Ferry&quot;,
+&quot;Pierce&quot;,&quot;Thurston; Mason; Grays Harbor; Lewis; King&quot;,
+&quot;Skagit&quot;,&quot;Skagit; Snohomish; Whatcom; Island&quot;,
+&quot;San Juan&quot;,&quot;San Juan; Island; Whatcom; Skagit; Snohomish&quot;,
+&quot;Skamania&quot;,&quot;Pacific; Lewis; Cowlitz; Clark; Skamania; Klickitat; Wahkiakum&quot;,
+&quot;Snohomish&quot;,&quot;Snohomish; King; Skagit&quot;,
+&quot;Spokane&quot;,&quot;Spokane; Lincoln; Stevens; Pend Oreille; Whitman; Franklin; Benton&quot;,
+&quot;Stevens&quot;,&quot;Douglas; Okanogan; Ferry; Lincoln; Stevens; Pend Oreille; Spokane; Adams&quot;,
+&quot;Thurston&quot;,&quot;Clallam; Jefferson; Grays Harbor; Mason; Kitsap; Thurston; Lewis&quot;,
+&quot;Wahkiakum&quot;,&quot;Wahkiakum; Pacific; Lewis; Cowlitz; Clark; Skamania; Klickitat&quot;,
+&quot;Walla Walla&quot;,&quot;Benton; Walla Walla; Columbia; Adams; Franklin; Whitman; Garfield; Asotin&quot;,
+&quot;Whatcom&quot;,&quot;Whatcom; Skagit; Island&quot;,
+&quot;Whitman&quot;,&quot;Walla Walla; Columbia; Adams; Franklin; Whitman; Garfield; Asotin; Spokane; Benton; Lincoln&quot;,
+&quot;Yakima&quot;,&quot;Yakima; Benton; Walla Walla; Columbia; Adams; Franklin; Kittitas; Grant; Douglas; Chelan; Adams; Okanoogan; Ferry&quot;,&quot;&quot;
+
+
+
+) </stringValue>
+            </value>
+        </processMetadataValues>
+        <name>formula_6_myRule_5_A1_2675959994</name>
+        <dataType>String</dataType>
+        <expression>CASE({!myVariable_current.C501_Training_Location__r.C501_Imagine_WA_County__c} ,
+&quot;Adams&quot;,&quot;Grant; Douglas; Adams; Lincoln; Spokane; Whitman; Franklin; Benton; Walla Walla; Columbia; Garfield; Asotin&quot;,
+&quot;Asotin&quot;,&quot;Benton; Walla Walla; Columbia; Adams; Franklin; Whitman; Garfield; Asotin; Spokane&quot;,
+&quot;Benton&quot;,&quot;Benton; Yakima; Walla Walla; Columbia; Grant; Adams; Franklin&quot;,
+&quot;Chelan&quot;,&quot;Kittitas; Grant; Douglas; Chelan; Okanogan &quot;,
+&quot;Clallam&quot;,&quot;Clallam; Jefferson; Grays Harbor; Mason; Kitsap; Thurston&quot;,
+&quot;Clark&quot;,&quot;Pacific; Lewis; Cowlitz; Clark; Skamania; Klickitat; Wahkiakum&quot;,
+&quot;Columbia&quot;,&quot;Benton; Walla Walla; Columbia; Adams; Franklin; Whitman; Garfield; Asotin; Spokane&quot;,
+&quot;Cowlitz&quot;,&quot;Pacific; Lewis; Cowlitz; Clark; Skamania; Klickitat; Wahkiakum&quot;,
+&quot;Douglas&quot;,&quot;Yakima; Kittitas; Grant; Douglas; Chelan; Adams; Okanoogan; Ferry&quot;,
+&quot;Ferry&quot;,&quot;Douglas; Okanogan; Ferry; Lincoln; Stevens; Pend Oreille; Spokane&quot;,
+&quot;Franklin&quot;,&quot;Benton; Walla Walla; Columbia; Grant; Adams; Franklin; Whitman; Garfield; Asotin&quot;,
+&quot;Garfield&quot;,&quot;Benton; Walla Walla; Columbia; Adams; Franklin; Whitman; Garfield; Asotin; Spokane&quot;,
+&quot;Grant&quot;,&quot;Yakima; Kittitas; Grant; Douglas; Chelan; Adams&quot;,
+&quot;Grays Harbor&quot;,&quot;Clallam; Jefferson; Grays Harbor; Mason; Kitsap; Thurston; Pacific; Lewis; Wahkiakum&quot;,
+&quot;Island&quot;,&quot;Island; San Juan; Whatcom; Skagit; Snohomish; Clallam; Jefferson; Kitsap&quot;,
+&quot;Jefferson&quot;,&quot;Clallam; Jefferson; Grays Harbor; Mason; Kitsap; Thurston&quot;,
+&quot;King&quot;,&quot;King; Snohomish; Pierce&quot;,
+&quot;Kitsap&quot;,&quot;Kitsap; Clallam; Jefferson; Grays Harbor; Mason; Thurston; Pierce&quot;,
+&quot;Kittitas&quot;,&quot;Yakima; Kittitas; Grant; Douglas; Chelan&quot;,
+&quot;Klickitat&quot;,&quot;Pacific; Lewis; Cowlitz; Clark; Skamania; Klickitat&quot;,
+&quot;Lewis&quot;,&quot;Pacific; Lewis; Pierce; Thurston; Cowlitz; Clark; Skamania; Klickitat; Wahkiakum&quot;,
+&quot;Lincoln&quot;,&quot;Douglas; Grant; Okanogan; Ferry; Lincoln; Stevens; Pend Oreille; Spokane; Adams&quot;,
+&quot;Mason&quot;,&quot;Clallam; Jefferson; Grays Harbor; Mason; Kitsap; Thurston&quot;,
+&quot;Okanogan&quot;,&quot;Grant; Douglas; Chelan; Okanogan; Ferry; Lincoln; Stevens&quot;,
+&quot;Pacific&quot;,&quot;Pacific; Lewis; Pierce; Thurston; Cowlitz; Clark; Skamania; Wahkiakum&quot;,
+&quot;Pend Oreille&quot;,&quot;Ferry; Lincoln; Stevens; Pend Oreille; Spokane; Ferry&quot;,
+&quot;Pierce&quot;,&quot;Thurston; Mason; Grays Harbor; Lewis; King&quot;,
+&quot;Skagit&quot;,&quot;Skagit; Snohomish; Whatcom; Island&quot;,
+&quot;San Juan&quot;,&quot;San Juan; Island; Whatcom; Skagit; Snohomish&quot;,
+&quot;Skamania&quot;,&quot;Pacific; Lewis; Cowlitz; Clark; Skamania; Klickitat; Wahkiakum&quot;,
+&quot;Snohomish&quot;,&quot;Snohomish; King; Skagit&quot;,
+&quot;Spokane&quot;,&quot;Spokane; Lincoln; Stevens; Pend Oreille; Whitman; Franklin; Benton&quot;,
+&quot;Stevens&quot;,&quot;Douglas; Okanogan; Ferry; Lincoln; Stevens; Pend Oreille; Spokane; Adams&quot;,
+&quot;Thurston&quot;,&quot;Clallam; Jefferson; Grays Harbor; Mason; Kitsap; Thurston; Lewis&quot;,
+&quot;Wahkiakum&quot;,&quot;Wahkiakum; Pacific; Lewis; Cowlitz; Clark; Skamania; Klickitat&quot;,
+&quot;Walla Walla&quot;,&quot;Benton; Walla Walla; Columbia; Adams; Franklin; Whitman; Garfield; Asotin&quot;,
+&quot;Whatcom&quot;,&quot;Whatcom; Skagit; Island&quot;,
+&quot;Whitman&quot;,&quot;Walla Walla; Columbia; Adams; Franklin; Whitman; Garfield; Asotin; Spokane; Benton; Lincoln&quot;,
+&quot;Yakima&quot;,&quot;Yakima; Benton; Walla Walla; Columbia; Adams; Franklin; Kittitas; Grant; Douglas; Chelan; Adams; Okanoogan; Ferry&quot;,&quot;&quot;
+
+
+
+)</expression>
+    </formulas>
+    <formulas>
+        <processMetadataValues>
+            <name>originalFormula</name>
+            <value>
+                <stringValue>AND(ISNEW(),NOT(ISBLANK([Campaign].custom_Start_DateTime__c  )),NOT(ISBLANK([Campaign].custom_End_DateTime__c )))</stringValue>
+            </value>
+        </processMetadataValues>
+        <name>formula_myRule_1</name>
+        <dataType>Boolean</dataType>
+        <expression>AND(ISNEW(),NOT(ISBLANK({!myVariable_current.custom_Start_DateTime__c}  )),NOT(ISBLANK({!myVariable_current.custom_End_DateTime__c} )))</expression>
+    </formulas>
+    <formulas>
+        <processMetadataValues>
+            <name>originalFormula</name>
+            <value>
+                <stringValue>OR(ISNEW(),ISCHANGED([Campaign].C501_Training_Location__c))</stringValue>
+            </value>
+        </processMetadataValues>
+        <name>formula_myRule_5</name>
+        <dataType>Boolean</dataType>
+        <expression>OR(ISNEW(),ISCHANGED({!myVariable_current.C501_Training_Location__c}))</expression>
+    </formulas>
+    <formulas>
+        <processMetadataValues>
+            <name>originalFormula</name>
+            <value>
+                <stringValue>OR(ISNEW(),ISCHANGED([Campaign].C501_Training_Location__c))</stringValue>
+            </value>
+        </processMetadataValues>
+        <name>formula_myRule_5_pmetrule</name>
+        <dataType>Boolean</dataType>
+        <expression>OR(ISNEW(),ISCHANGED({!myVariable_old.C501_Training_Location__c}))</expression>
+    </formulas>
+    <interviewLabel>TrainingEventCreated-9_InterviewLabel</interviewLabel>
+    <label>TrainingEventCreated</label>
+    <processMetadataValues>
+        <name>ObjectType</name>
+        <value>
+            <stringValue>Campaign</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>ObjectVariable</name>
+        <value>
+            <elementReference>myVariable_current</elementReference>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OldObjectVariable</name>
+        <value>
+            <elementReference>myVariable_old</elementReference>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>TriggerType</name>
+        <value>
+            <stringValue>onAllChanges</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>Workflow</processType>
+    <recordCreates>
+        <name>myRule_1_A1</name>
+        <label>Create Event</label>
+        <locationX>100</locationX>
+        <locationY>200</locationY>
+        <connector>
+            <targetReference>myDecision4</targetReference>
+        </connector>
+        <inputAssignments>
+            <processMetadataValues>
+                <name>dataType</name>
+                <value>
+                    <stringValue>DateTime</stringValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>isRequired</name>
+                <value>
+                    <booleanValue>false</booleanValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>leftHandSideLabel</name>
+                <value>
+                    <stringValue>End Date Time</stringValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>rightHandSideType</name>
+                <value>
+                    <stringValue>Formula</stringValue>
+                </value>
+            </processMetadataValues>
+            <field>EndDateTime</field>
+            <value>
+                <elementReference>formula_2_myRule_1_A1_1289305091</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <processMetadataValues>
+                <name>dataType</name>
+                <value>
+                    <stringValue>ID</stringValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>isRequired</name>
+                <value>
+                    <booleanValue>false</booleanValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>leftHandSideLabel</name>
+                <value>
+                    <stringValue>Assigned To ID</stringValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>rightHandSideType</name>
+                <value>
+                    <stringValue>Reference</stringValue>
+                </value>
+            </processMetadataValues>
+            <field>OwnerId</field>
+            <value>
+                <elementReference>myVariable_current.OwnerId</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <processMetadataValues>
+                <name>dataType</name>
+                <value>
+                    <stringValue>DateTime</stringValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>isRequired</name>
+                <value>
+                    <booleanValue>false</booleanValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>leftHandSideLabel</name>
+                <value>
+                    <stringValue>Start Date Time</stringValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>rightHandSideType</name>
+                <value>
+                    <stringValue>Formula</stringValue>
+                </value>
+            </processMetadataValues>
+            <field>StartDateTime</field>
+            <value>
+                <elementReference>formula_3_myRule_1_A1_4988774744</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <processMetadataValues>
+                <name>dataType</name>
+                <value>
+                    <stringValue>String</stringValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>isRequired</name>
+                <value>
+                    <booleanValue>false</booleanValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>leftHandSideLabel</name>
+                <value>
+                    <stringValue>Subject</stringValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>leftHandSideReferenceTo</name>
+                <value>
+                    <stringValue></stringValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>rightHandSideType</name>
+                <value>
+                    <stringValue>Reference</stringValue>
+                </value>
+            </processMetadataValues>
+            <field>Subject</field>
+            <value>
+                <elementReference>myVariable_current.Name</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <processMetadataValues>
+                <name>dataType</name>
+                <value>
+                    <stringValue>ID</stringValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>isRequired</name>
+                <value>
+                    <booleanValue>false</booleanValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>leftHandSideLabel</name>
+                <value>
+                    <stringValue>Related To ID</stringValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>leftHandSideReferenceTo</name>
+                <value>
+                    <stringValue>Account;Asset;AssetRelationship;Campaign;Case;Contract;GW_Volunteers__Volunteer_Hours__c;GW_Volunteers__Volunteer_Job__c;GW_Volunteers__Volunteer_Shift__c;ListEmail;Opportunity;Order;Product2;Solution;npo02__Household__c;npsp__Engagement_Plan_Template__c;npsp__Engagement_Plan__c;npsp__Fund__c;npsp__General_Accounting_Unit__c;npsp__Grant_Deadline__c</stringValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>rightHandSideType</name>
+                <value>
+                    <stringValue>Reference</stringValue>
+                </value>
+            </processMetadataValues>
+            <field>WhatId</field>
+            <value>
+                <elementReference>myVariable_current.Id</elementReference>
+            </value>
+        </inputAssignments>
+        <object>Event</object>
+    </recordCreates>
+    <recordUpdates>
+        <processMetadataValues>
+            <name>evaluationType</name>
+            <value>
+                <stringValue>always</stringValue>
+            </value>
+        </processMetadataValues>
+        <processMetadataValues>
+            <name>extraTypeInfo</name>
+        </processMetadataValues>
+        <processMetadataValues>
+            <name>isChildRelationship</name>
+            <value>
+                <booleanValue>false</booleanValue>
+            </value>
+        </processMetadataValues>
+        <processMetadataValues>
+            <name>reference</name>
+            <value>
+                <stringValue>[Campaign]</stringValue>
+            </value>
+        </processMetadataValues>
+        <processMetadataValues>
+            <name>referenceTargetField</name>
+        </processMetadataValues>
+        <name>myRule_5_A1</name>
+        <label>Update Outreach Counties</label>
+        <locationX>500</locationX>
+        <locationY>200</locationY>
+        <filters>
+            <processMetadataValues>
+                <name>implicit</name>
+                <value>
+                    <booleanValue>true</booleanValue>
+                </value>
+            </processMetadataValues>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>myVariable_current.Id</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <processMetadataValues>
+                <name>dataType</name>
+                <value>
+                    <stringValue>MultiPicklist</stringValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>isRequired</name>
+                <value>
+                    <booleanValue>false</booleanValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>leftHandSideLabel</name>
+                <value>
+                    <stringValue>Outreach WA Counties</stringValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>leftHandSideReferenceTo</name>
+                <value>
+                    <stringValue></stringValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>rightHandSideType</name>
+                <value>
+                    <stringValue>Formula</stringValue>
+                </value>
+            </processMetadataValues>
+            <field>C501_Outreach_WA_Counties__c</field>
+            <value>
+                <elementReference>formula_6_myRule_5_A1_2675959994</elementReference>
+            </value>
+        </inputAssignments>
+        <object>Campaign</object>
+    </recordUpdates>
+    <startElementReference>myDecision</startElementReference>
+    <status>Draft</status>
+    <variables>
+        <name>myVariable_current</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>true</isOutput>
+        <objectType>Campaign</objectType>
+    </variables>
+    <variables>
+        <name>myVariable_old</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+        <objectType>Campaign</objectType>
+    </variables>
+</Flow>

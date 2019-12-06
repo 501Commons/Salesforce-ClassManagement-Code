@@ -1,0 +1,10 @@
+INSTRUCTIONS:
+THE ONLY MERGE FIELDS ALLOWED ARE 
+<Training_Name__c>
+<Start_DateTime__c>
+<City__c>
+<<<<YOU CAN EDIT THE SMS TEMPLATE BELOW THE THIS LINE>>>>
+
+<Training_Name__c> se acerca el <Start_DateTime__c> en <City__c>. Regístrese hoy en <Registration_Link__c>. 
+
+>>Cambia tus preferencias aquí: https://imaginewa.org/pref
