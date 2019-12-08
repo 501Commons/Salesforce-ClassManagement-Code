@@ -1,0 +1,37 @@
+<apex:page id="TrainingRegistration" showHeader="false">
+
+  <style> 
+  
+     body { 
+       background-color: #FF195A; 
+       font-family: 'Houschka Rounded Alt';
+       font-weight: 500;
+       font-style: normal;
+       font-size: 18px;
+       line-height: 1.42857143;
+       color: #333;
+    } 
+    
+    input, textarea, select, button {
+       font-family: 'Houschka Rounded Alt';
+       font-weight: 500;
+       font-style: normal;
+       font-size: 18px;
+       line-height: 1.42857143;
+       color: #333;
+    }
+        
+    .pbButton .FlowNextBtn
+    {
+      color:#0091B3;
+      text-align:center;
+    }
+
+    .pbButtonb .FlowNextBtn
+    {
+      color:#0091B3;
+      text-align:center;
+    }
+    
+</style>
+</apex:page>

@@ -38,3 +38,5 @@ $RECYCLE.BIN/
 force-app/main/default/classes/C501_UTIL_Outreach.cls
 force-app/main/default/classes/C501_UTIL_Outreach.cls-meta.xml
 .vscode/settings.json
+
+temp/

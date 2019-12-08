@@ -1,0 +1,42 @@
+<apex:page id="TrainingRegistration" showHeader="false">
+
+  <style> 
+  
+     body { 
+       background-color: #FF195A; 
+       font-family: 'Houschka Rounded Alt';
+       font-weight: 500;
+       font-style: normal;
+       font-size: 18px;
+       line-height: 1.42857143;
+       color: #333;
+    } 
+    
+    input, textarea, select, button {
+       font-family: 'Houschka Rounded Alt';
+       font-weight: 500;
+       font-style: normal;
+       font-size: 18px;
+       line-height: 1.42857143;
+       color: #333;
+    }
+    
+    body .bPageBlock, body #bodyCell .bResource .secondaryPalette, body .secondaryPalette.bPageBlock, body .individualPalette .secondaryPalette.bPageBlock, body .bodyDiv .genericTable, body .genericPageBlockTable, body .bodyDiv .bSubBlock, body .bComponentBlock .bPageBlock, body .bMyDashboard .bPageBlock, body.rlHoverFrame .bPageBlock, body.subjectSelectionPopup div.choicesBox, body.lookupTab .secondaryPalette.bPageBlock, body.popupTab .secondaryPalette.bPageBlock, body.UserTagStatsPage .secondaryPalette.bPageBlock {
+        background-color: #fff;
+    }
+        
+    .pbButton .FlowNextBtn
+    {
+      color:#0091B3;
+      text-align:center;
+    }
+
+    .pbButtonb .FlowNextBtn
+    {
+      color:#0091B3;
+      text-align:center;
+    }
+    
+</style>
+  <flow:interview name="Training_Registration"/>
+</apex:page>

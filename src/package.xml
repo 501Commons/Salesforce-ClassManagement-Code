@@ -12,10 +12,34 @@
         <members>C501_Test_Send_Single_SMS</members>
         <members>C501_Test_Utility</members>
         <members>C501_Twilio_Outbound</members>
+        <members>ComponentControllerBase</members>
+        <members>DateTimeUtility</members>
+        <members>PageControllerBase</members>
+        <members>leadConvertController</members>
+        <members>leadConvertCoreComponentController</members>
+        <members>leadConvertTaskDescComponentController</members>
+        <members>leadConvertTaskInfoComponentController</members>
+        <members>leadConvertTaskRemindComponentController</members>
         <name>ApexClass</name>
     </types>
     <types>
+        <members>Lead.LeadConvertShowFields</members>
+        <name>FieldSet</name>
+    </types>
+    <types>
+        <members>leadConvertCoreComponent</members>
+        <members>leadConvertPageHeaderTextComponent</members>
+        <members>leadConvertTaskDescriptionComponent</members>
+        <members>leadConvertTaskInfoComponent</members>
+        <name>ApexComponent</name>
+    </types>
+    <types>
         <members>EmailOptOut</members>
+        <members>EmailPref</members>
+        <members>SMSPref</members>
+        <members>TrainingReg</members>
+        <members>TrainingRegistration</members>
+        <members>leadConvertPage</members>
         <name>ApexPage</name>
     </types>
     <types>

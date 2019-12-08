@@ -1,0 +1,92 @@
+<apex:page id="TrainingRegistration" showHeader="false">
+
+  
+<html>
+  <head>
+     <apex:includeLightning />
+     <style> 
+  
+      body { 
+        background-color: #FF195A; 
+        font-family: 'Houschka Rounded Alt';
+        font-weight: 500;
+        font-style: normal;
+        font-size: 18px;
+        line-height: 1.42857143;
+        color: #333;
+     } 
+     
+     input, textarea, select, button {
+        font-family: 'Houschka Rounded Alt';
+        font-weight: 500;
+        font-style: normal;
+        font-size: 18px;
+        line-height: 1.42857143;
+        color: #333;
+     }
+     
+     body .bPageBlock, body #bodyCell .bResource .secondaryPalette, body .secondaryPalette.bPageBlock, body .individualPalette .secondaryPalette.bPageBlock, body .bodyDiv .genericTable, body .genericPageBlockTable, body .bodyDiv .bSubBlock, body .bComponentBlock .bPageBlock, body .bMyDashboard .bPageBlock, body.rlHoverFrame .bPageBlock, body.subjectSelectionPopup div.choicesBox, body.lookupTab .secondaryPalette.bPageBlock, body.popupTab .secondaryPalette.bPageBlock, body.UserTagStatsPage .secondaryPalette.bPageBlock {
+         background-color: #fff;
+     }
+         
+     .pbButton .FlowNextBtn
+     {
+       color:#0091B3;
+       text-align:center;
+     }
+ 
+     .pbButtonb .FlowNextBtn
+     {
+       color:#0091B3;
+       text-align:center;
+     }
+     span.slds-checkbox_on, span.slds-checkbox_off {
+    font-size: 1.5em;
+    margin-left: 1.5em;
+    margin-top: 3px;
+}
+.slds-checkbox_faux_container {
+    display: inline-flex;
+}
+ </style>
+  </head>
+  <body class="slds-scope">
+     <div id="flowContainer" />
+     <script>
+        var statusChange = function (event) {
+           if(event.getParam("status") === "FINISHED") {
+              // Control what happens when the interview finishes
+
+              var outputVariables = event.getParam("outputVariables");
+              var key;
+              for(key in outputVariables) {
+                 if(outputVariables[key].name === "myOutput") {
+                    // Do something with an output variable
+                 }
+              }
+           }
+        };
+        $Lightning.use("c:C501_Lighting_Flow_APP", function() {
+           // Create the flow component and set the onstatuschange attribute
+           $Lightning.createComponent("lightning:flow", {"onstatuschange":statusChange},
+              "flowContainer",
+              function (component) {
+                 // Set the input variables
+                 var inputVariables = [
+                    //{
+                       //name : 'myInput',
+                       //type : 'String',
+                       //value : "Hello, world"
+                    //}
+                 ];
+                 
+                 // Start an interview in the flowContainer div, and 
+                 // initializes the input variables.
+                 component.startFlow("Email_Only_Preferences_FLOW", inputVariables);
+              }
+           );
+        });
+     </script>
+  </body>
+</html>
+</apex:page>
