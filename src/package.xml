@@ -23,10 +23,6 @@
         <name>ApexClass</name>
     </types>
     <types>
-        <members>Lead.LeadConvertShowFields</members>
-        <name>FieldSet</name>
-    </types>
-    <types>
         <members>leadConvertCoreComponent</members>
         <members>leadConvertPageHeaderTextComponent</members>
         <members>leadConvertTaskDescriptionComponent</members>
@@ -62,12 +58,16 @@
         <name>EmailTemplate</name>
     </types>
     <types>
+        <members>Lead.LeadConvertShowFields</members>
+        <name>FieldSet</name>
+    </types>
+    <types>
         <members>C501_Guest_Update_Create_FLOW</members>
         <members>C501_SMS_and_Email_Training_Outreach_FLOW</members>
         <members>Email_Only_Preferences_FLOW</members>
         <members>Email_SMS_Preferences_FLOW</members>
-        <members>TrainingEventCreated</members>
         <members>SMS_Only_Preferences_FLOW</members>
+        <members>TrainingEventCreated</members>
         <name>Flow</name>
     </types>
     <types>
