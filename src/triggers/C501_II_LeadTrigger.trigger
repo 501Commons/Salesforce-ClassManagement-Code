@@ -16,8 +16,9 @@ trigger C501_II_LeadTrigger on Lead (after insert) {
             Priority = 'Normal',
             Description = leadInserted.Class_Type__c,
             ActivityDate = Date.Today(),
-            WhoId = leadInserted.Id,
-            OwnerId = '0056A000000qgpsQAA'));
+            WhoId = leadInserted.Id
+            //,OwnerId = '0056A000000qgpsQAA'
+            ));
     }
 
     if (!tasks.isEmpty()) {

@@ -382,7 +382,7 @@ public with sharing class C501_Outreach_Email_SMS {
             tk.WhatId = trainingId;
             tk.ActivityDate	= Date.Today();
             tk.WhoId = ct;
-            tk.OwnerId = '0056A000000qgpsQAA';
+            //tk.OwnerId = '0056A000000qgpsQAA';
             
             tsk.add(tk);
             System.debug('tk-INDIVIDUAL TASK: ' + tk);

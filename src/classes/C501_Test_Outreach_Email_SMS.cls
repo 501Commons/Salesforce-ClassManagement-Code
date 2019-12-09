@@ -69,8 +69,9 @@ public with sharing class C501_Test_Outreach_Email_SMS {
                 WhatId = campaigns[0].Id,
                 Subject = 'Subject',
                 Priority = 'Normal',
-                Description = 'Description',
-                OwnerId = '0056A000000qgpsQAA'));
+                Description = 'Description'
+                //,OwnerId = '0056A000000qgpsQAA'
+                ));
         }
     }
     
