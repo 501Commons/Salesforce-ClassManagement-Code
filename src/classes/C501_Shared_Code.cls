@@ -77,31 +77,50 @@ public with sharing class C501_Shared_Code {
         return stringValue;
     }
 
-    public static void SendAdminAlert(LoggingLevel logLevel, String adminEmailAddress, String message){
+    private static Boolean fCheckedCanSendAdminAlert = false;
+    public static Boolean CanSendAdminAlert {
+        get {
+            if (!fCheckedCanSendAdminAlert) {
+                CanSendAdminAlert = true;
 
-        List<EmailMessage> adminEmailMessages = [SELECT CreatedDate FROM EmailMessage WHERE Subject = 'Salesforce Admin Notification' ORDER BY CreatedDate DESC LIMIT 1];
-        if (!adminEmailMessages.isEmpty()) {
+                List<EmailMessage> adminEmailMessages = [SELECT CreatedDate FROM EmailMessage WHERE Subject = 'Salesforce Admin Notification' ORDER BY CreatedDate DESC LIMIT 1];
+                if (!adminEmailMessages.isEmpty()) {
 
-            // Check to only send up to 1 per day interval
-            DateTime checkDateTime = Datetime.now().addDays(-1);
-            if (adminEmailMessages[0].CreatedDate > checkDateTime) {
-                return;
+                    // Check to only send up to 1 per day interval
+                    DateTime checkDateTime = Datetime.now().addDays(-1);
+                    if (adminEmailMessages[0].CreatedDate > checkDateTime) {
+                        CanSendAdminAlert = false;
+                        fCheckedCanSendAdminAlert = true;
+                    }
+                }
             }
+
+            return CanSendAdminAlert;
         }
 
-        EmailMessage adminEmail = new EmailMessage(
-            Subject = 'Salesforce Admin Notification',
-            Status = '3'
-        );
-        Database.insert(adminEmail, false);
+        set;
+    }
 
-        // Output Debugger
-		System.debug(logLevel, message);
+    public static void SendAdminAlert(LoggingLevel logLevel, String adminEmailAddress, String message){
+
+        System.debug(logLevel, message);
 
         // Ignore sending email for UNABLE_TO_LOCK_ROW because scheduled action will retry again
         if (message.contains('UNABLE_TO_LOCK_ROW')) {
             return;
         }
+
+        if (!C501_Shared_Code.CanSendAdminAlert) {
+            return;
+        }
+
+        C501_Shared_Code.CanSendAdminAlert = false;
+        
+        EmailMessage adminEmail = new EmailMessage(
+            Subject = 'Salesforce Admin Notification',
+            Status = '3'
+        );
+        Database.insert(adminEmail, false);
 
         // Output Email Message
         if (Limits.getEmailInvocations() >= Limits.getLimitEmailInvocations()) {
