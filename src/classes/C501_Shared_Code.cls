@@ -82,8 +82,8 @@ public with sharing class C501_Shared_Code {
         List<EmailMessage> adminEmailMessages = [SELECT CreatedDate FROM EmailMessage WHERE Subject = 'Salesforce Admin Notification' ORDER BY CreatedDate DESC LIMIT 1];
         if (!adminEmailMessages.isEmpty()) {
 
-            // Check to only send up to 1 per 5 minute interval
-            DateTime checkDateTime = Datetime.now().addMinutes(-5);
+            // Check to only send up to 1 per day interval
+            DateTime checkDateTime = Datetime.now().addDays(-1);
             if (adminEmailMessages[0].CreatedDate > checkDateTime) {
                 return;
             }
@@ -129,19 +129,15 @@ public with sharing class C501_Shared_Code {
         return C501_Shared_Code.SendEmails(emails, adminEmail, emailTemplate, messageData, C501_Shared_Code.isSandbox);
     }
 
+    public static Integer LimitEmailInvocations() {
+        return Limits.getLimitEmailInvocations() - Limits.getEmailInvocations();
+    }
+
     public static Boolean SendEmails(List<Messaging.SingleEmailMessage> emails, String adminEmail, String emailTemplate, String messageData, Boolean isSandbox) {
 
         if (emails.isEmpty()) {
             return false;
         }
-
-        if (Limits.getEmailInvocations() >= Limits.getLimitEmailInvocations()) {
-            System.debug(LoggingLevel.DEBUG, '*****C501_Shared_Code::SendEmails - Disabled sending emails since limit reached: ' + Limits.getLimitEmailInvocations());
-            return false;
-        }
-
-        // Salesforce Limit is 10 but set to 5 just to be safe.  This is in a sync process so can be safe and take a bit longer
-        Integer maxEmailsPerSend = 5;
 
         Messaging.reserveSingleEmailCapacity(2);
         List<Messaging.SingleEmailMessage> adminEmails = new List<Messaging.SingleEmailMessage>();
@@ -151,6 +147,11 @@ public with sharing class C501_Shared_Code {
             // Send in batches of 10 which is the limit for Messaging.sendEmail
             List<Messaging.SendEmailResult> results = new List<Messaging.SendEmailResult>();
             for (Messaging.SingleEmailMessage emailMessage :emails) {
+
+                if (C501_Shared_Code.LimitEmailInvocations() <= 0) {
+                    System.debug(LoggingLevel.DEBUG, '*****C501_Shared_Code::SendEmails - Disabled sending emails since limit reached: ' + Limits.getLimitEmailInvocations());
+                    return false;
+                }
 
 /*
                 // Check to override email unless allowed domain
@@ -172,11 +173,11 @@ public with sharing class C501_Shared_Code {
 */
                 emailSendQueue.add(emailMessage);
 
-                if (emailSendQueue.size() == maxEmailsPerSend) {
+                if (emailSendQueue.size() == C501_Shared_Code.LimitEmailInvocations()) {
                     results.addAll(Messaging.sendEmail(emailSendQueue, false));
                     emailSendQueue.clear();
                 }
-                else if (emailSendQueue.size() > maxEmailsPerSend) {
+                else if (emailSendQueue.size() > C501_Shared_Code.LimitEmailInvocations()) {
                     Messaging.SingleEmailMessage adminMail = C501_Shared_Code.BuildAdminEmail(null, adminEmail, adminEmail, emailTemplate, messageData, 'Error SendEmail Loop: send email queue size should never exceed 10 Actual: ' + String.valueOf(emailSendQueue.size()), C501_Shared_Code.isSandbox);
                     if (adminMail != null) {
                         adminEmails.add(adminMail);
@@ -184,11 +185,11 @@ public with sharing class C501_Shared_Code {
                 }
             }
 
-            if (emailSendQueue.size() > 0 && emailSendQueue.size() <= maxEmailsPerSend) {
+            if (emailSendQueue.size() > 0 && emailSendQueue.size() <= C501_Shared_Code.LimitEmailInvocations()) {
                 results.addAll(Messaging.sendEmail(emailSendQueue, false));
                 emailSendQueue.clear();
             }
-            else if (emailSendQueue.size() > maxEmailsPerSend) {
+            else if (emailSendQueue.size() > C501_Shared_Code.LimitEmailInvocations()) {
                 Messaging.SingleEmailMessage adminMail = C501_Shared_Code.BuildAdminEmail(null, adminEmail, adminEmail, emailTemplate, messageData, 'Error SendEmail Overflow: send email queue size should never exceed 10 Actual: ' + String.valueOf(emailSendQueue.size()), C501_Shared_Code.isSandbox);
                 if (adminMail != null) {
                     adminEmails.add(adminMail);
@@ -230,21 +231,26 @@ public with sharing class C501_Shared_Code {
                 emailSendQueue.clear();
                 for (Messaging.SingleEmailMessage emailMessage :adminEmails) {
 
+                    if (C501_Shared_Code.LimitEmailInvocations() <= 0) {
+                        System.debug(LoggingLevel.DEBUG, '*****C501_Shared_Code::SendEmails - Disabled sending admin emails since limit reached: ' + Limits.getLimitEmailInvocations());
+                        return false;
+                    }
+
                     emailSendQueue.add(emailMessage);
-                    if (emailSendQueue.size() == maxEmailsPerSend) {
+                    if (emailSendQueue.size() == C501_Shared_Code.LimitEmailInvocations()) {
                         Messaging.sendEmail(emailSendQueue, false);
                         emailSendQueue.clear();
                     }
-                    else if (emailSendQueue.size() > maxEmailsPerSend) {
+                    else if (emailSendQueue.size() > C501_Shared_Code.LimitEmailInvocations()) {
                         throw new InvalidParameterValueException('Error SendEmail - Admin Loop: send email queue size should never exceed 10');
                     }
                 }
 
-                if (emailSendQueue.size() > 0 && emailSendQueue.size() <= maxEmailsPerSend) {
+                if (emailSendQueue.size() > 0 && emailSendQueue.size() <= C501_Shared_Code.LimitEmailInvocations()) {
                     Messaging.sendEmail(emailSendQueue, false);
                     emailSendQueue.clear();
                 }
-                else if (emailSendQueue.size() > maxEmailsPerSend) {
+                else if (emailSendQueue.size() > C501_Shared_Code.LimitEmailInvocations()) {
                     throw new InvalidParameterValueException('Error SendEmail - Admin Overflow: send email queue size should never exceed 10');
                 }
 
