@@ -4,6 +4,8 @@ project:
     package:
         name:  Salesforce-ClassManagement-Code
         api_version: '47.0'
+    dependencies:
+        - github: 'https://github.com/501Commons/SMS-for-Flows'
     source_format: sfdx
 
 tasks:
